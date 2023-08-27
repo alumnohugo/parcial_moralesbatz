@@ -67,15 +67,16 @@ class AsignacionController{
         u.usu_id,
         r.rol_nombre AS permiso_rol,
         r.rol_id,
-        u.usu_estado
-    FROM
+        u.usu_situacion AS usu_estado,
+        u.usu_password FROM
         permiso p
     INNER JOIN
         usuario u ON p.permiso_usuario = u.usu_id
     INNER JOIN
         rol r ON p.permiso_rol = r.rol_id
     WHERE
-        p.permiso_situacion = 1";
+        p.permiso_situacion = 1;
+     ";
     
     if ($usu_id != '') {
         $sql .= " AND usuarios.usu_id = '$usu_id'";
@@ -100,10 +101,10 @@ class AsignacionController{
     }
     public static function modificarAPI()
     {
-   
+                
         try {
-            $asignacion = new Asignacion($_POST);
-            $resultado = $asignacion->actualizar();
+            $permiso = new Asignacion($_POST);
+            $resultado = $permiso->actualizar();
 
             if ($resultado['resultado'] == 1) {
                 echo json_encode([
@@ -125,6 +126,7 @@ class AsignacionController{
             ]);
         }
     }
+
     public  static function roles()
     {
         
