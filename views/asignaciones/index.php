@@ -1,28 +1,29 @@
 <div class="row justify-content-center mb-5">
+    <h1>Asignaciones de roles</h1>
     <form class="col-lg-8 border bg-light p-3" id="formularioAsignaciones">
-        <input type="Hidden" name="asig_id" id="asig_id">
+        <input type="Hidden" name="permiso_id" id="permiso_id">
 
         <div class="row mb-4 mt-3">
             <div class="col-lg-12">
-                <label for="select">Alumnos del curso </label>
-                <select class="form-control" name="asig_alumno" id="asig_alumno">
+                <label for="select">USUARIOS </label>
+                <select class="form-control" name="permiso_usuario" id="permiso_usuario">
 
 
-                    <option value="">Seleccione el nombre del alumno</option>
-                    <?php foreach ($alumnos as $alumno) { ?>
-                        <option value="<?= $alumno['alumno_id']  ?>"><?= $alumno['alumno_nombre']  ?><?= " " ?><?= $alumno['alumno_apellido']  ?></option>
+                    <option value="">Seleccione un usuario</option>
+                    <?php foreach ($usuarios as $usuario) { ?>
+                        <option value="<?= $usuario['usu_id']  ?>"><?= $usuario['usu_nombre']  ?></option>
                     <?php  }  ?>
                 </select>
             </div>
         </div>
         <div class="row mb-4 mt-3">
             <div class="col-lg-12">
-                <label for="select">Materias</label>
-                <select class="form-control" name="asig_materia" id="asig_materia">
+                <label for="select">ROLES</label>
+                <select class="form-control" name="permiso_rol" id="permiso_rol">
                  
-                    <option value="">Seleccione una materia </option>
-                    <?php foreach ($materias as $materia) { ?>
-                        <option value="<?= $materia['materia_id']  ?>"><?= $materia['materia_nombre']  ?></option>
+                    <option value="">Seleccione un rol</option>
+                    <?php foreach ($rols as $rol) { ?>
+                        <option value="<?= $rol['rol_id']  ?>"><?= $rol['rol_nombre']  ?></option>
                     <?php  }  ?>
                 </select>
             </div>
