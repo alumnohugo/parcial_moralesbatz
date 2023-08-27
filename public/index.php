@@ -20,6 +20,7 @@ $router->post('/API/usuarios/guardar', [UsuarioController::class,'guardarApi']);
 $router->get('/asignaciones', [AsignacionController::class,'index']);
 $router->get('/API/asignaciones/buscar', [AsignacionController::class,'buscarApi']);
 $router->post('/API/asignaciones/guardar', [AsignacionController::class,'guardarApi']);
+$router->post('/API/asignaciones/modificar', [AsignacionController::class,'modificarApi']);
 
 
 

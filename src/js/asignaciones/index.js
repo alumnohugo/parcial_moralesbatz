@@ -9,7 +9,12 @@ const btnBuscar = document.getElementById('btnBuscar');
 const btnModificar = document.getElementById('btnModificar');
 const btnGuardar = document.getElementById('btnGuardar');
 const btnCancelar = document.getElementById('btnCancelar');
-
+const divPassword = document.getElementById('usu_password');
+const divUsuario = document.getElementById('permiso_usuario');
+const divRol = document.getElementById('permiso_rol');
+divPassword.parentElement.style.display = ' none';
+// divUsuario.parentElement.style.display = 'blcok';
+// divRol.parentElement.style.display = ' block';
 btnModificar.disabled = true;
 btnModificar.parentElement.style.display = 'none';
 btnCancelar.disabled = true;
@@ -26,22 +31,22 @@ const datatable = new DataTable('#tablaAsignaciones', {
         },
         {
             title: 'USUARIO',
-            data: 'usuario'
+            data: 'permiso_usuario' 
         },
         {
             title: 'PERMISO',
-            data: 'rol'
+            data: 'permiso_rol' 
         },
         {
             title: 'ESTADO',
-            data: 'situacion_usuario'
+            data: 'usu_estado'
         },
         {
-            title: 'MODIFICAR',
+            title: 'MODIFICAR PASSWORD',
             data: 'permiso_id',
             searchable: false,
             orderable: false,
-            render: (data, type, row, meta) => `<button class="btn btn-warning" data-id='${data}' data-usuario='${row["usuario"]}' data-rol='${row["rol"]}' >Modificar</button>`
+            render : (data, type, row, meta) => `<button class="btn btn-warning" data-id='${data}' data-usuario='${row["permiso_usuario"]}' data-rol='${row["permiso_rol"]}' data-password='${row["usu_password"]}' >Modificar</button>`
         },
         {
             title: 'ELIMINAR',
@@ -56,13 +61,13 @@ const datatable = new DataTable('#tablaAsignaciones', {
             searchable: false,
             orderable: false,
             render: (data, type, row, meta) => {
-                if (row['situacion_usuario'].trim() === '1') {
+                if (row['usu_estado'].trim() === '1') {
                     return `<button class="btn btn-success" data-id='${data}' >Activar</button>`;
                 } else {
                     return `<button class="btn btn-info" data-id='${data}' >DESACTIVAR</button>`;
                 }
             }
-        }
+        },
     ]
 });
 
@@ -123,7 +128,7 @@ const buscar = async () => {
     try {
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
-
+        // console.log(data)
         datatable.clear().draw();
         if (data) {
             contador = 1;
@@ -139,12 +144,39 @@ const buscar = async () => {
         console.log(error);
     }
 }
+const traeDatos = (e) => {
+    const button = e.target;
+    const id = button.dataset.id;
+    const usuario = button.dataset.usuario;
+    const rol = button.dataset.rol;
+    const password = button.dataset.password;
+
+    const dataset = {
+        id,
+        usuario,
+        rol,
+        password
+    };
+    console.log(dataset)
+    colocarDatos(dataset);
+    const body = new FormData(formulario);
+    body.append('permiso_id', id);
+    body.append('permiso_usuario', usuario);
+    body.append('permiso_rol', rol); 
+    body.append('usu_password', password);
+        
+};
 const colocarDatos = (dataset) => {
+   
     formulario.permiso_usuario.value = dataset.usuario;
     formulario.permiso_rol.value = dataset.rol;
 
     formulario.permiso_id.value = dataset.id;
+    formulario.usu_password.value = dataset.password;
 
+    divPassword.parentElement.style.display = ' block';
+    // divUsuario.parentElement.style.display = 'none';
+    // divRol.parentElement.style.display = 'none';
     btnGuardar.disabled = true
     btnGuardar.parentElement.style.display = 'none';
     btnBuscar.disabled = true
@@ -156,32 +188,18 @@ const colocarDatos = (dataset) => {
 
   
 }
-const traeDatos = (e) => {
-    const button = e.target;
-    const id = button.dataset.id;
-    const usuario = button.dataset.usuario;
-    const rol = button.dataset.rol;
-
-    const dataset = {
-        id,
-        usuario,
-        rol
-    };
-    colocarDatos(dataset);
-        const body = new FormData(formulario);
-        body.append('permiso_id', id);
-        body.append('permiso_usuario', usuario);
-        body.append('permiso_rol', rol);   
-};
 
 const modificar = async () => {
-    if(!validarFormulario(formulario)){
-        alert('Debe llenar todos los campos');
-        return 
-    }
-
+    // if (!validarFormulario(divUsuario)) {
+    //     Toast.fire({
+    //         icon: 'info',
+    //         text: 'Debe llenar todos los campos'
+    //     });
+    //     // return;
+    // }
+    
     const body = new FormData(formulario)
-    const url = '/examen_parcial/API/permisos/modificar';
+    const url = 'parcial_moralesbatz/API/asignaciones/modificar';
     const config = {
         method : 'POST',
         body
@@ -190,7 +208,8 @@ const modificar = async () => {
     try {
         const respuesta = await fetch(url, config)
         const data = await respuesta.json();
-        
+        console.log(data)
+        return
         const {codigo, mensaje,detalle} = data;
         let icon = 'info'
         switch (codigo) {
@@ -219,10 +238,8 @@ const modificar = async () => {
         console.log(error);
     }
 }
-
-
 buscar()
 formulario.addEventListener('submit', guardar);
 btnBuscar.addEventListener('click', buscar);
-btnModificar.addEventListener('click', modificar)
 datatable.on('click','.btn-warning', traeDatos )
+btnModificar.addEventListener('click', modificar)
