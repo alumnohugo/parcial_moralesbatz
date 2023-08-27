@@ -55,42 +55,68 @@ class AsignacionController{
         }
     }
     
-    public static function buscarApi()
+   
+    public static function buscarAPI()
     {
-      
-        $usu_nombre = $_GET['permiso_usuario'];
-        $rol_nombre = $_GET['permiso_rol'];
-       
+        $usu_id = $_GET['usu_id'];
+        $rol_id = $_GET['rol_id'];
 
         $sql = "SELECT
-        u.usu_nombre AS usuario,
-        r.rol_nombre AS rol,
-        u.usu_situacion AS situacion_usuario,
-        u.usu_password AS password
+        p.permiso_id,
+        u.usu_nombre AS permiso_usuario,
+        u.usu_id,
+        r.rol_nombre AS permiso_rol,
+        r.rol_id,
+        u.usu_estado
     FROM
         permiso p
-    JOIN
+    INNER JOIN
         usuario u ON p.permiso_usuario = u.usu_id
-    JOIN
+    INNER JOIN
         rol r ON p.permiso_rol = r.rol_id
     WHERE
-        p.permiso_situacion = 1 ";
+        p.permiso_situacion = 1";
+    
+    if ($usu_id != '') {
+        $sql .= " AND usuarios.usu_id = '$usu_id'";
+    }
+    
+    if ($rol_id != '') {
+        $sql .= " AND roles.rol_id = '$rol_id'";
+    }
 
-        if ($usu_nombre != '') {
-            $sql .= " and LOWER(permiso_usuario) like LOWER ('%$usu_nombre%') ";
-        }
-
-        if ($rol_nombre != '') {
-            $sql .= " and LOWER (permiso_rol) like LOWER ('%$rol_nombre%') ";
-        }
-        
-        
         try {
-            
-            $asignacion = Asignacion::fetchArray($sql);
-            header('Content-Type: application/json');
 
-            echo json_encode($asignacion);
+            $permisos = Asignacion::fetchArray($sql);
+
+            echo json_encode($permisos);
+        } catch (Exception $e) {
+            echo json_encode([
+                'detalle' => $e->getMessage(),
+                'mensaje' => 'Ocurrió un error',
+                'codigo' => 0
+            ]);
+        }
+    }
+    public static function modificarAPI()
+    {
+   
+        try {
+            $asignacion = new Asignacion($_POST);
+            $resultado = $asignacion->actualizar();
+
+            if ($resultado['resultado'] == 1) {
+                echo json_encode([
+                    'mensaje' => 'Registro modificado correctamente',
+                    'codigo' => 1
+                ]);
+            } else {
+                echo json_encode([
+                    'mensaje' => 'Ocurrió un error',
+                    'codigo' => 0
+                ]);
+            }
+
         } catch (Exception $e) {
             echo json_encode([
                 'detalle' => $e->getMessage(),

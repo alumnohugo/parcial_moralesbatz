@@ -20,7 +20,7 @@
             <div class="col-lg-12">
                 <label for="select">ROLES</label>
                 <select class="form-control" name="permiso_rol" id="permiso_rol">
-                 
+
                     <option value="">Seleccione un rol</option>
                     <?php foreach ($roles as $rol) { ?>
                         <option value="<?= $rol['rol_id']  ?>"><?= $rol['rol_nombre']  ?></option>
@@ -44,5 +44,13 @@
             </div>
         </div>
     </form>
+</div>
+
+<div class="row justify-content-center ">
+    <div class="col table-responsive" style="max-width: 70%; padding: 10px;">
+
+        <table id="tablaAsignaciones" class="table table-bordered table-hover  ">
+        </table>
+    </div>
 </div>
 <script src="<?= asset('./build/js/asignaciones/index.js')  ?>"></script>

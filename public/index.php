@@ -18,7 +18,11 @@ $router->get('/usuarios', [UsuarioController::class,'index']);
 $router->post('/API/usuarios/guardar', [UsuarioController::class,'guardarApi']);
 
 $router->get('/asignaciones', [AsignacionController::class,'index']);
+$router->get('/API/asignaciones/buscar', [AsignacionController::class,'buscarApi']);
 $router->post('/API/asignaciones/guardar', [AsignacionController::class,'guardarApi']);
+
+
+
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();
