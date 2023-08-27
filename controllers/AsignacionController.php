@@ -55,6 +55,50 @@ class AsignacionController{
         }
     }
     
+    public static function buscarApi()
+    {
+      
+        $usu_nombre = $_GET['permiso_usuario'];
+        $rol_nombre = $_GET['permiso_rol'];
+       
+
+        $sql = "SELECT
+        u.usu_nombre AS usuario,
+        r.rol_nombre AS rol,
+        u.usu_situacion AS situacion_usuario,
+        u.usu_password AS password
+    FROM
+        permiso p
+    JOIN
+        usuario u ON p.permiso_usuario = u.usu_id
+    JOIN
+        rol r ON p.permiso_rol = r.rol_id
+    WHERE
+        p.permiso_situacion = 1 ";
+
+        if ($usu_nombre != '') {
+            $sql .= " and LOWER(permiso_usuario) like LOWER ('%$usu_nombre%') ";
+        }
+
+        if ($rol_nombre != '') {
+            $sql .= " and LOWER (permiso_rol) like LOWER ('%$rol_nombre%') ";
+        }
+        
+        
+        try {
+            
+            $asignacion = Asignacion::fetchArray($sql);
+            header('Content-Type: application/json');
+
+            echo json_encode($asignacion);
+        } catch (Exception $e) {
+            echo json_encode([
+                'detalle' => $e->getMessage(),
+                'mensaje' => 'Ocurrió un error',
+                'codigo' => 0
+            ]);
+        }
+    }
     public  static function roles()
     {
         

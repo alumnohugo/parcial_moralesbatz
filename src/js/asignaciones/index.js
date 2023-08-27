@@ -65,4 +65,38 @@ const guardar = async (evento) => {
     }
 };
 
+const buscar = async () => {
+    const permiso_usuario = formulario.permiso_usuario.value;
+    const permiso_rol = formulario.permiso_rol.value;
+    const url = `/parcial_moralesbatz/API/asignaciones/buscar?permiso_usuario=${permiso_usuario}&permiso_rol=${permiso_rol}`;
+    const config = {
+        method: 'GET'
+    };
+
+    try {
+        const respuesta = await fetch(url, config);
+        const data = await respuesta.json();
+        // console.log(data);
+        // return
+        datatable.clear().draw();
+        if (data) {
+            contador = 1;
+            datatable.rows.add(data).draw();
+        } else {
+            Toast.fire({
+                title: 'No se encontraron registros',
+                icon: 'info'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+buscar();
+
 formulario.addEventListener('submit', guardar);
+btnBuscar.addEventListener('click', buscar);
+datatable.on('click', '.btn-warning', traeDatos);
+datatable.on('click', '.btn-danger', eliminar);
+btnModificar.addEventListener('click', modificar)
+btnCancelar.addEventListener('click', cancelarAccion)
