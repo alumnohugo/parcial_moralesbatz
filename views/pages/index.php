@@ -1,6 +1,6 @@
 <div class="row mb-3">
   <div class="col text-center">
-    <h1>Ejemplo</h1>
+    <h1>DEVJOBS</h1>
   </div>
 </div>
 <div class="row justify-content-center">
