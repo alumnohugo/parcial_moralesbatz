@@ -17,7 +17,7 @@ class  Asignacion extends ActiveRecord{
         $this->permiso_id = $args['permiso_id'] ?? null;
         $this->permiso_usuario = $args['permiso_usuario'] ?? '';
         $this->permiso_rol = $args['permiso_rol'] ?? '';
-        $this->permiso_situacion = $args['permiso_situacion'] ?? '1';
+        $this->permiso_situacion = $args['permiso_situacion'] ??  '';
         
         
     }

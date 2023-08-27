@@ -11,7 +11,7 @@
         <div class="row mb-3">
             <div class="col">
                 <label for="usu_correo">Ingrese su catalogo</label>
-                <input type="email" name="usu_correo" id="usu_correo" class="form-control">
+                <input type="number" name="usu_correo" id="usu_correo" class="form-control">
             </div>
         </div>
         <div class="row mb-3">

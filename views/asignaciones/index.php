@@ -1,6 +1,6 @@
 <div class="row justify-content-center mb-5">
-    <h1>Asignaciones de roles</h1>
     <form class="col-lg-8 border bg-light p-3" id="formularioAsignaciones">
+        <h1>Asignacion de roles</h1>
         <input type="Hidden" name="permiso_id" id="permiso_id">
 
         <div class="row mb-4 mt-3">
@@ -22,7 +22,7 @@
                 <select class="form-control" name="permiso_rol" id="permiso_rol">
                  
                     <option value="">Seleccione un rol</option>
-                    <?php foreach ($rols as $rol) { ?>
+                    <?php foreach ($roles as $rol) { ?>
                         <option value="<?= $rol['rol_id']  ?>"><?= $rol['rol_nombre']  ?></option>
                     <?php  }  ?>
                 </select>
@@ -45,3 +45,4 @@
         </div>
     </form>
 </div>
+<script src="<?= asset('./build/js/asignaciones/index.js')  ?>"></script>
