@@ -25,7 +25,7 @@ const chartVentas = new Chart(context, {
 })
 
 const getEstadisticas = async () => {
-    const url = `/parcial_moralesbatz/API/usuarios/estadistica`;
+    const url = `/parcial_moralesbatz/API/usuarios/estadistica2`;
     const config = {
         method : 'GET'
     }
@@ -44,7 +44,7 @@ const getEstadisticas = async () => {
         if(data){
 
             data.forEach( registro => {
-                chartVentas.data.labels.push(registro.estado)
+                chartVentas.data.labels.push(registro.rol)
                 chartVentas.data.datasets[0].data.push(registro.cantidad)
                 chartVentas.data.datasets[0].backgroundColor.push(getRandomColor())
             });

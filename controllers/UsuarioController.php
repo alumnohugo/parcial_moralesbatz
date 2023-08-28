@@ -18,15 +18,25 @@ class UsuarioController{
 
     public static function guardarApi() {
         try {
-           
+            $usuario = $_POST['usu_usuario'];
             $contrasenia = $_POST['usu_password'];
-          
+    
+            // Verificar si el usuario ya existe
+            $usuarioExistente = Usuario::fetchFirst("SELECT * FROM usuario WHERE usu_usuario = '$usuario'");
+            if ($usuarioExistente) {
+                echo json_encode([
+                    'mensaje' => 'El nombre de usuario ya está en uso',
+                    'codigo' => 0
+                ]);
+                return;
+            }
+    
+            // Hashear la contraseña
             $contraseniaHasheada = password_hash($contrasenia, PASSWORD_DEFAULT);
-             
             $_POST['usu_password'] = $contraseniaHasheada;
-               
+    
+            // Crear un nuevo usuario
             $usuario = new Usuario($_POST);
-              
             $resultado = $usuario->crear();
     
             if ($resultado['resultado'] == 1) {
@@ -36,7 +46,7 @@ class UsuarioController{
                 ]);
             } else {
                 echo json_encode([
-                    'mensaje' => 'Ocurrió un error',
+                    'mensaje' => 'Ocurrió un error al guardar el registro',
                     'codigo' => 0
                 ]);
             }
@@ -48,6 +58,7 @@ class UsuarioController{
             ]);
         }
     }
+    
 
     
 

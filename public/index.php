@@ -28,7 +28,8 @@ $router->post('/API/asignaciones/desactivar', [AsignacionController::class,'desa
 
 $router->get('/usuarios/estadistica', [DetalleController::class,'estadistica']);
 $router->get('/API/usuarios/estadistica', [DetalleController::class,'detalleUsuariosAPI']);
-
+$router->get('/usuarios/estadistica2', [DetalleController::class,'estadistica2']);
+$router->get('/API/usuarios/estadistica2', [DetalleController::class,'detalleUsuarios2API']);
 
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador

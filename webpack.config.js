@@ -8,7 +8,8 @@ module.exports = {
     'js/inicio' : './src/js/inicio.js',
     'js/usuarios/index' : './src/js/usuarios/index.js',
     'js/asignaciones/index' : './src/js/asignaciones/index.js',
-    'js/usuarios/estadistica' : './src/js/usuarios/estadistica.js'
+    'js/usuarios/estadistica' : './src/js/usuarios/estadistica.js',
+    'js/usuarios/estadistica2' : './src/js/usuarios/estadistica2.js'
   },
   output: {
     filename: '[name].js',

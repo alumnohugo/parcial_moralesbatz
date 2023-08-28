@@ -196,7 +196,7 @@ const colocarDatos = (dataset) => {
     passwordInput.readOnly = true;
 
     divPassword.parentElement.style.display = ' block';
-
+    
     btnGuardar.disabled = true;
     btnGuardar.parentElement.style.display = 'none';
     btnBuscar.disabled = true;
