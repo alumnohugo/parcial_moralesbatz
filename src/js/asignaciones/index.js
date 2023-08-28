@@ -39,7 +39,18 @@ const datatable = new DataTable('#tablaAsignaciones', {
         },
         {
             title: 'ESTADO',
-            data: 'usu_estado'
+            data: 'usu_estado',
+            render: (data, type, row, meta) => {
+                if (data.trim() === '2') {
+                    return 'Activo';
+                } else if (data.trim() === '3') {
+                    return 'Desactivado';
+                } else if (data.trim() === '1') {
+                    return 'Pendiente';
+                } else {
+                    return ''; 
+                }
+            }
         },
         {
             title: 'MODIFICAR PASSWORD',
@@ -57,16 +68,19 @@ const datatable = new DataTable('#tablaAsignaciones', {
         },
         {
             title: 'ACTIVAR / DESACTIVAR',
-            data: 'usu_id',
+            data: 'usu_estado',
             searchable: false,
             orderable: false,
             render: (data, type, row, meta) => {
-                if (row['usu_estado'].trim() === '1') {
-                    return `<button class="btn btn-success" data-id='${data}' >Activar</button>`;
-                } else {
-                    return `<button class="btn btn-info" data-id='${data}' >DESACTIVAR</button>`;
+                if (data.trim() === '1') {
+                    return `<button class="btn btn-success" data-id='${row['usu_id']}' >Activar</button>`;
+                } else if (data.trim() === '2') {
+                    return `<button class="btn btn-info" data-id='${row['usu_id']}' >Desactivar</button>`;
+                } else if (data.trim() === '3') {
+                    return `<button class="btn btn-success" data-id='${row['usu_id']}' >activar</button>`;
                 }
             }
+            
         },
     ]
 });
@@ -270,6 +284,54 @@ const modificar = async () => {
         console.log(error);
     }
 };
+
+const eliminar = async (e) => {
+    const button = e.target;
+    const id = button.dataset.id
+    // console.log(id)
+    if(await confirmacion('warning','¿Desea eliminar este registro?')){
+        const body = new FormData()
+        body.append('permiso_id', id)
+        const url = '/parcial_moralesbatz/API/asignaciones/eliminar';
+        const headers = new Headers();
+        headers.append("X-Requested-With","fetch");
+        const config = {
+            method : 'POST',
+            body
+        }
+        try {
+            const respuesta = await fetch(url, config)
+            const data = await respuesta.json();
+            console.log(data)
+            // return
+            const {codigo, mensaje,detalle} = data;
+    
+            let icon = 'info'
+            switch (codigo) {
+                case 1:
+                    icon = 'success'
+                    buscar();
+                    break;
+            
+                case 0:
+                    icon = 'error'
+                    console.log(detalle)
+                    break;
+            
+                default:
+                    break;
+            }
+    
+            Toast.fire({
+                icon,
+                text: mensaje
+            })
+    
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
 const cancelarAccion = () => {
     divPassword.parentElement.style.display = 'none';
     btnGuardar.disabled = false
@@ -282,8 +344,106 @@ const cancelarAccion = () => {
     btnCancelar.parentElement.style.display = 'none'
    
 }
+const activar = async (e) => {
+    const button = e.target;
+    const id = button.dataset.id
+    
+    console.log(id)
+    if(await confirmacion('warning','¿Desea activar este usuario?')){
+        const body = new FormData()
+        body.append('usu_id', id)
+        const url = '/parcial_moralesbatz/API/asignaciones/activar';
+        const headers = new Headers();
+        headers.append("X-Requested-With","fetch");
+        const config = {
+            method : 'POST',
+            body
+        }
+        try {
+            
+            const respuesta = await fetch(url, config)    
+            const data = await respuesta.json();
+            const {codigo, mensaje} = data;
+            // console.log(data)
+            // return
+            let icon = 'info'
+            switch (codigo) {
+                case 1:
+                    icon = 'success'
+                    buscar();
+                    break;
+            
+                case 0:
+                    icon = 'error'
+                    console.log(mensaje)
+                    break;
+            
+                default:
+                    break;
+            }
+    
+            Toast.fire({
+                icon,
+                text: mensaje
+            })
+    
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
 
+const desactivar = async (e) => {
+    const button = e.target;
+    const id = button.dataset.id
+    
+    console.log(id)
+    if(await confirmacion('warning','¿Desea desactivar este usuario?')){
+        const body = new FormData()
+        body.append('usu_id', id)
+        const url = '/parcial_moralesbatz/API/asignaciones/desactivar';
+        const headers = new Headers();
+        headers.append("X-Requested-With","fetch");
+        const config = {
+            method : 'POST',
+            body
+        }
+        try {
+            
+            const respuesta = await fetch(url, config)    
+            const data = await respuesta.json();
+            const {codigo, mensaje} = data;
+    
+            let icon = 'info'
+            switch (codigo) {
+                case 1:
+                    icon = 'success'
+                    buscar();
+                    break;
+            
+                case 0:
+                    icon = 'error'
+                    console.log(mensaje)
+                    break;
+            
+                default:
+                    break;
+            }
+    
+            Toast.fire({
+                icon,
+                text: mensaje
+            })
+    
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
 buscar();
+datatable.on('click','.btn-success', activar )
+datatable.on('click','.btn-info', desactivar )
+datatable.on('click','.btn-danger', eliminar )
 formulario.addEventListener('submit', guardar);
 btnCancelar.addEventListener('click', cancelarAccion)
 btnBuscar.addEventListener('click', buscar);

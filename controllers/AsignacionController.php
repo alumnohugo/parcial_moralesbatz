@@ -68,16 +68,15 @@ class AsignacionController{
         u.usu_id,
         r.rol_nombre AS permiso_rol,
         r.rol_id,
-        u.usu_situacion AS usu_estado,
-        u.usu_password FROM
+        u.usu_situacion AS usu_estado
+    FROM
         permiso p
     INNER JOIN
         usuario u ON p.permiso_usuario = u.usu_id
     INNER JOIN
         rol r ON p.permiso_rol = r.rol_id
     WHERE
-        p.permiso_situacion = 1;
-     ";
+        p.permiso_situacion IN (1, 2, 3) ";
     
     if ($usu_id != '') {
         $sql .= " AND usuarios.usu_id = '$usu_id'";
@@ -109,7 +108,7 @@ class AsignacionController{
     
             $_POST['usu_password'] = $nuevaContrasenaHasheada;
     
-            $permiso = new Asignacion($_POST);
+            $permiso= new Asignacion($_POST);
             $resultado = $permiso->actualizar();
     
             if ($resultado['resultado'] == 1) {
@@ -132,6 +131,34 @@ class AsignacionController{
         }
     }
     
+    public static function eliminarAPI()
+    {
+        try {
+            $permiso_id = $_POST['permiso_id'];
+            $permiso = Asignacion::find($permiso_id);
+            $permiso->permiso_situacion = 0;
+            $resultado = $permiso->actualizar();
+
+            if ($resultado['resultado'] == 1) {
+                echo json_encode([
+                    'mensaje' => 'Registro eliminado correctamente',
+                    'codigo' => 1
+                ]);
+            } else {
+                echo json_encode([
+                    'mensaje' => 'Ocurrió un error',
+                    'codigo' => 0
+                ]);
+            }
+           
+        } catch (Exception $e) {
+            echo json_encode([
+                'detalle' => $e->getMessage(),
+                'mensaje' => 'Ocurrió un error',
+                'codigo' => 0
+            ]);
+        }
+    }
 
 
     public  static function roles()
@@ -157,7 +184,74 @@ class AsignacionController{
         }
     }
     
-
+    public static function activarAPI(){
+        try {
+            $usu_id = $_POST['usu_id'];
+            $sql = "UPDATE usuario
+            SET usu_situacion = CASE
+                WHEN usu_situacion IN (1, 3) THEN 2
+                ELSE usu_situacion
+            END
+            WHERE usu_id = $usu_id
+            AND usu_situacion IN (1, 2, 3)";
+            $params = array(':usu_id' => $usu_id);
+            $resultado = Asignacion::SQL($sql, $params);
+    
+            if ($resultado == 1) {
+                echo json_encode([
+                    'mensaje' => 'Usuario activado correctamente',
+                    'codigo' => 1
+                ]);
+            } else {
+                echo json_encode([
+                    'mensaje' => 'Ocurrió un error al activar el usuario',
+                    'codigo' => 0
+                ]);
+            }
+        } catch (Exception $e) {
+            echo json_encode([
+                'detalle' => $e->getMessage(),
+                'mensaje' => 'Ocurrió un error',
+                'codigo' => 0
+            ]);
+        }
+    }
+    
+    
+    public static function desactivarAPI(){
+        try {
+            $usu_id = $_POST['usu_id'];
+            $sql = "UPDATE usuario
+            SET usu_situacion = CASE
+                WHEN usu_situacion = 2 THEN 3
+                ELSE usu_situacion
+            END
+            WHERE usu_id = $usu_id
+            AND usu_situacion IN (1, 2, 3);
+            ";
+            $params = array(':usu_id' => $usu_id);
+            $resultado = Asignacion::SQL($sql, $params);
+    
+            if ($resultado == 1) {
+                echo json_encode([
+                    'mensaje' => 'Usuario desactivado correctamente',
+                    'codigo' => 1
+                ]);
+            } else {
+                echo json_encode([
+                    'mensaje' => 'Ocurrió un error al desactivar el usuario',
+                    'codigo' => 0
+                ]);
+            }
+        } catch (Exception $e) {
+            echo json_encode([
+                'detalle' => $e->getMessage(),
+                'mensaje' => 'Ocurrió un error',
+                'codigo' => 0
+            ]);
+        }
+    }
+    
 
     public  static function usuarios()
     {

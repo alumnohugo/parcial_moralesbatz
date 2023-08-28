@@ -21,7 +21,9 @@ $router->get('/asignaciones', [AsignacionController::class,'index']);
 $router->get('/API/asignaciones/buscar', [AsignacionController::class,'buscarApi']);
 $router->post('/API/asignaciones/guardar', [AsignacionController::class,'guardarApi']);
 $router->post('/API/asignaciones/modificar', [AsignacionController::class,'modificarApi']);
-
+$router->post('/API/asignaciones/eliminar', [AsignacionController::class,'eliminarApi']);
+$router->post('/API/asignaciones/activar', [AsignacionController::class,'activarApi']);
+$router->post('/API/asignaciones/desactivar', [AsignacionController::class,'desactivarApi']);
 
 
 
