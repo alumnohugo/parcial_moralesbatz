@@ -109,10 +109,7 @@ class AsignacionController{
     
             $_POST['usu_password'] = $nuevaContrasenaHasheada;
     
-            $permiso = new Asignacion([
-                'permiso_id' => $permiso_id,
-                'usu_password' => $nuevaContrasenaHasheada
-            ]);
+            $permiso = new Asignacion($_POST);
             $resultado = $permiso->actualizar();
     
             if ($resultado['resultado'] == 1) {
