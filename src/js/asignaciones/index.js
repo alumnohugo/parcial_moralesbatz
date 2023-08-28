@@ -177,7 +177,7 @@ const traeDatos = (e) => {
         rol,
         password
     };
-    console.log(dataset)
+    // console.log(dataset)
     // return
     colocarDatos(dataset);
     const body = new FormData(formulario);
@@ -191,9 +191,9 @@ const colocarDatos = (dataset) => {
     formulario.permiso_id.value = dataset.id;
     formulario.permiso_usuario.value = dataset.usuario;
     formulario.permiso_rol.value = dataset.rol;
-    const passwordInput = formulario.usu_password;
-    formulario.usu_password.value = dataset.password;
-    passwordInput.readOnly = true;
+    // const passwordInput = formulario.usu_password;
+    // formulario.usu_password.value = dataset.password;
+    // passwordInput.readOnly = true;
 
     divPassword.parentElement.style.display = ' block';
     
@@ -216,52 +216,27 @@ const modificar = async () => {
         return;
     }
 
-    const { value: newPassword } = await Swal.fire({
-        title: 'Ingrese la nueva contraseña:',
-        input: 'password',
-        inputAttributes: {
-            autocapitalize: 'off',
-            autocorrect: 'off'
-        },
-        showCancelButton: true,
-        confirmButtonText: 'Guardar',
-        cancelButtonText: 'Cancelar',
-        inputValidator: (value) => {
-            if (!value) {
-                return 'Debe ingresar una contraseña';
-            }
-        }
-    });
-
-    if (newPassword === undefined) {
-        return;
-    }
-
-    const id = formulario.permiso_id.value;
-    const permiso_usuario = formulario.permiso_usuario.value;
-    const permiso_rol = formulario.permiso_rol.value;
-
-    const url = '/parcial_moralesbatz/API/asignaciones/modificar'; 
-    const body = new FormData();
-    body.append('permiso_id', id);
-    body.append('usu_password', newPassword);
-    body.append('permiso_usuario', permiso_usuario);
-    body.append('permiso_rol', permiso_rol);
-
+ 
+    const body = new FormData(formulario);
+    body.delete('permiso_id');
+    const url = '/parcial_moralesbatz/API/asignaciones/guardar';
     const config = {
         method: 'POST',
         body
     };
 
+
     try {
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
+        console.log(data)
+        return
 
         const { codigo, mensaje, detalle } = data;
         let icon = 'info';
         switch (codigo) {
             case 1:
-                formulario.usu_password.value = newPassword;
+              
                 formulario.reset();
                 icon = 'success';
                 buscar()
