@@ -49,29 +49,6 @@ class UsuarioController{
         }
     }
 
-    public static function estadisticaUsu(Router $router){
-        $router->render('usuarios/estadistica', []);
-    
-    }
-    public static function detalleUsuariosAPI(){
-
-        $sql = "SELECT usu_estado, COUNT(usu_id) AS cantidad_usuarios
-        FROM usuario
-        GROUP BY usu_estado";
-
-        try {
-            
-            $usuarios = Usuario::fetchArray($sql);
-    
-            echo json_encode($usuarios);
-        } catch (Exception $e) {
-            echo json_encode([
-                'detalle' => $e->getMessage(),
-                'mensaje' => 'Ocurrió un error',
-                'codigo' => 0
-            ]);
-        }
-    }
     
 
    
