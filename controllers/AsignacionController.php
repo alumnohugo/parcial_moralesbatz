@@ -70,13 +70,14 @@ class AsignacionController{
         r.rol_id,
         u.usu_situacion AS usu_estado
     FROM
-        permiso p
-    INNER JOIN
-        usuario u ON p.permiso_usuario = u.usu_id
-    INNER JOIN
+        usuario u
+    LEFT JOIN
+        permiso p ON u.usu_id = p.permiso_usuario
+    LEFT JOIN
         rol r ON p.permiso_rol = r.rol_id
     WHERE
-        p.permiso_situacion IN (1, 2, 3) ";
+        u.usu_situacion IN (1, 2, 3) OR p.permiso_situacion IN (1, 2, 3) OR p.permiso_id IS NULL
+     ";
     
     if ($usu_id != '') {
         $sql .= " AND usuarios.usu_id = '$usu_id'";
@@ -102,23 +103,32 @@ class AsignacionController{
     public static function modificarAPI()
     {
         try {
-            $permiso_id = $_POST['permiso_id'];
-            $newPassword = $_POST['usu_password'];
-            $nuevaContrasenaHasheada = password_hash($newPassword, PASSWORD_DEFAULT);
+           
+            $datos = $_POST;
+            var_dump($_POST);
+            exit;
+           
+            if (!isset($datos['permiso_id'])) {
+                echo json_encode([
+                    'mensaje' => 'El ID del permiso es necesario para actualizar',
+                    'codigo' => 0
+                ]);
+                return;
+            }
     
-            $_POST['usu_password'] = $nuevaContrasenaHasheada;
-    
-            $permiso= new Asignacion($_POST);
+        
+            $permiso = new Asignacion($datos);
+         
             $resultado = $permiso->actualizar();
     
             if ($resultado['resultado'] == 1) {
                 echo json_encode([
-                    'mensaje' => 'Contraseña modificada correctamente',
+                    'mensaje' => 'Registro modificado correctamente',
                     'codigo' => 1
                 ]);
             } else {
                 echo json_encode([
-                    'mensaje' => 'Ocurrió un error al modificar la contraseña',
+                    'mensaje' => 'Ocurrió un error al actualizar el registro',
                     'codigo' => 0
                 ]);
             }
@@ -130,27 +140,30 @@ class AsignacionController{
             ]);
         }
     }
+    
     
     public static function eliminarAPI()
     {
         try {
             $permiso_id = $_POST['permiso_id'];
             $permiso = Asignacion::find($permiso_id);
+    
+            $permiso->permiso_rol = null;
             $permiso->permiso_situacion = 0;
+            
             $resultado = $permiso->actualizar();
-
+    
             if ($resultado['resultado'] == 1) {
                 echo json_encode([
-                    'mensaje' => 'Registro eliminado correctamente',
+                    'mensaje' => 'Roles quitados correctamente',
                     'codigo' => 1
                 ]);
             } else {
                 echo json_encode([
-                    'mensaje' => 'Ocurrió un error',
+                    'mensaje' => 'Ocurrió un error al quitar los roles',
                     'codigo' => 0
                 ]);
             }
-           
         } catch (Exception $e) {
             echo json_encode([
                 'detalle' => $e->getMessage(),
@@ -159,7 +172,7 @@ class AsignacionController{
             ]);
         }
     }
-
+    
 
     public  static function roles()
     {

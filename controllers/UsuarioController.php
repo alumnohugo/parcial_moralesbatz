@@ -16,13 +16,16 @@ class UsuarioController{
     }
 
 
-    public static function guardarApi() {
+    public static function guardarApi()
+    {
         try {
-            $usuario = $_POST['usu_usuario'];
-            $contrasenia = $_POST['usu_password'];
+            $nombre = $_POST['usu_nombre'];
+            $apellido = $_POST['usu_apellido'];
+            $usuario = $_POST['usu_catalogo'];
+            $password = $_POST['usu_password'];
     
-            // Verificar si el usuario ya existe
-            $usuarioExistente = Usuario::fetchFirst("SELECT * FROM usuario WHERE usu_usuario = '$usuario'");
+            // Aquí se valida si ya existe un usuario con el mismo nombre de usuario
+            $usuarioExistente = Usuario::fetchFirst("SELECT * FROM usuario WHERE usu_catalogo = '$usuario'");
             if ($usuarioExistente) {
                 echo json_encode([
                     'mensaje' => 'El nombre de usuario ya está en uso',
@@ -31,13 +34,16 @@ class UsuarioController{
                 return;
             }
     
-            // Hashear la contraseña
-            $contraseniaHasheada = password_hash($contrasenia, PASSWORD_DEFAULT);
-            $_POST['usu_password'] = $contraseniaHasheada;
+            // Aquí se crea un nuevo objeto Usuario para guardar en la base de datos
+            $nuevoUsuario = new Usuario([
+                'usu_nombre' => $nombre,
+                'usu_apellido' => $apellido,
+                'usu_catalogo' => $usuario,
+                'usu_password' => password_hash($password, PASSWORD_DEFAULT),
+                'usu_situacion' => 1
+            ]);
     
-            // Crear un nuevo usuario
-            $usuario = new Usuario($_POST);
-            $resultado = $usuario->crear();
+            $resultado = $nuevoUsuario->guardar();
     
             if ($resultado['resultado'] == 1) {
                 echo json_encode([
@@ -58,7 +64,6 @@ class UsuarioController{
             ]);
         }
     }
-    
 
     
 

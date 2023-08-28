@@ -13,13 +13,22 @@
             </div>
         </div>
 
+        <!-- <div class="row mb-4 mt-3">
+            <div class="col-lg-12">
+                <div id="usu_password2"  class="col">
+                    <label for="usu_password">Ingrese la contrasena nueva </label>
+                    <input type="password" name="usu_password" id="usu_password" class="form-control">
+                </div>
+            </div>
+        </div> -->
+
     
         <div class="row mb-4 mt-3">
             <div class="col-lg-12">
                 <div id="permiso_usuario"  class="col">
                     <label for="select">USUARIOS</label>
                     <select class="form-control" name="permiso_usuario" id="permiso_usuario">
-                        <option value="">Seleccione un usuario</option>
+                        <option  value="">Seleccione un usuario</option>
                         <?php foreach ($usuarios as $usuario) { ?>
                             <option value="<?= $usuario['usu_id']  ?>"><?= $usuario['usu_nombre']  ?></option>
                         <?php  }  ?>
@@ -33,7 +42,7 @@
             <div class="col-lg-12">
                 <label for="select">ROLES</label>
                 <select class="form-control" name="permiso_rol" id="permiso_rol">
-                    <option value="">Seleccione un rol</option>
+                    <option id="rol" value="">Seleccione un rol</option>
                     <?php foreach ($roles as $rol) { ?>
                         <option value="<?= $rol['rol_id']  ?>"><?= $rol['rol_nombre']  ?></option>
                     <?php  }  ?>
