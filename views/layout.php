@@ -16,7 +16,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="/ejemplo/">
+            <a class="navbar-brand" href="/parcial_moralesbatz/">
                 <img src="<?= asset('./images/cit.png') ?>" width="35px'" alt="cit" >
                 Aplicaciones
             </a>
@@ -24,7 +24,7 @@
                 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin: 0;">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/ejemplo/"><i class="bi bi-house-fill me-2"></i>Inicio</a>
+                        <a class="nav-link" aria-current="page" href="/parcial_moralesbatz/"><i class="bi bi-house-fill me-2"></i>Inicio</a>
                     </li>
   
                     <div class="nav-item dropdown " >
@@ -34,7 +34,14 @@
                         <ul class="dropdown-menu  dropdown-menu-dark "id="dropwdownRevision" style="margin: 0;">
                             <!-- <h6 class="dropdown-header">Información</h6> -->
                             <li>
-                                <a class="dropdown-item nav-link text-white " href="/aplicaciones/nueva"><i class="ms-lg-0 ms-2 bi bi-plus-circle me-2"></i>Subitem</a>
+                                <a class="dropdown-item nav-link text-white " href="/parcial_moralesbatz/usuarios"><i class="ms-lg-0 ms-2 bi bi-plus-circle me-2"></i>USUARIOS</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item nav-link text-white " href="/parcial_moralesbatz/asignaciones"><i class="ms-lg-0 ms-2 bi bi-plus-circle me-2"></i>ASIGNAR ROLES </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item nav-link text-white " href="/parcial_moralesbatz/usuarios/estadistica><i class="ms-lg-0 ms-2 bi bi-plus-circle me-2"></i>ESTADISTICA USUARIOS ACTIVOS </a>
                             </li>
                         
                     
