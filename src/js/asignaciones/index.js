@@ -229,8 +229,8 @@ const modificar = async () => {
     try {
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
-        console.log(data)
-        return
+        // console.log(data)
+        // return
 
         const { codigo, mensaje, detalle } = data;
         let icon = 'info';
