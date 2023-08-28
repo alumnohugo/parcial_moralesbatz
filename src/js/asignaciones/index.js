@@ -302,7 +302,7 @@ const eliminar = async (e) => {
         try {
             const respuesta = await fetch(url, config)
             const data = await respuesta.json();
-            console.log(data)
+            // console.log(data)
             // return
             const {codigo, mensaje,detalle} = data;
     
