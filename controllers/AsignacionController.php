@@ -17,7 +17,8 @@ class AsignacionController{
             'permiso_usuario' => $usuario,
             'permiso_rol' => $rol,
             'usuarios' => $usuarios, 
-            'roles' => $roles
+            'roles' => $roles,
+            'usu_password' => $usuario
        ]);
      
     
@@ -101,23 +102,30 @@ class AsignacionController{
     }
     public static function modificarAPI()
     {
-                
         try {
-            $permiso = new Asignacion($_POST);
+            $permiso_id = $_POST['permiso_id'];
+            $newPassword = $_POST['usu_password'];
+            $nuevaContrasenaHasheada = password_hash($newPassword, PASSWORD_DEFAULT);
+    
+            $_POST['usu_password'] = $nuevaContrasenaHasheada;
+    
+            $permiso = new Asignacion([
+                'permiso_id' => $permiso_id,
+                'usu_password' => $nuevaContrasenaHasheada
+            ]);
             $resultado = $permiso->actualizar();
-
+    
             if ($resultado['resultado'] == 1) {
                 echo json_encode([
-                    'mensaje' => 'Registro modificado correctamente',
+                    'mensaje' => 'Contraseña modificada correctamente',
                     'codigo' => 1
                 ]);
             } else {
                 echo json_encode([
-                    'mensaje' => 'Ocurrió un error',
+                    'mensaje' => 'Ocurrió un error al modificar la contraseña',
                     'codigo' => 0
                 ]);
             }
-
         } catch (Exception $e) {
             echo json_encode([
                 'detalle' => $e->getMessage(),
@@ -126,6 +134,8 @@ class AsignacionController{
             ]);
         }
     }
+    
+
 
     public  static function roles()
     {

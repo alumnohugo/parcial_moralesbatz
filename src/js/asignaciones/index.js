@@ -4,6 +4,7 @@ import { validarFormulario, Toast, confirmacion } from "../funciones";
 import DataTable from "datatables.net-bs5";
 import { lenguaje } from "../lenguaje";
 
+
 const formulario = document.querySelector('form');
 const btnBuscar = document.getElementById('btnBuscar');
 const btnModificar = document.getElementById('btnModificar');
@@ -12,9 +13,10 @@ const btnCancelar = document.getElementById('btnCancelar');
 const divPassword = document.getElementById('usu_password');
 const divUsuario = document.getElementById('permiso_usuario');
 const divRol = document.getElementById('permiso_rol');
+
 divPassword.parentElement.style.display = ' none';
-// divUsuario.parentElement.style.display = 'blcok';
-// divRol.parentElement.style.display = ' block';
+divUsuario.parentElement.style.display = 'block';
+divRol.parentElement.style.display = ' block';
 btnModificar.disabled = true;
 btnModificar.parentElement.style.display = 'none';
 btnCancelar.disabled = true;
@@ -46,7 +48,7 @@ const datatable = new DataTable('#tablaAsignaciones', {
             data: 'permiso_id',
             searchable: false,
             orderable: false,
-            render : (data, type, row, meta) => `<button class="btn btn-warning" data-id='${data}' data-usuario='${row["permiso_usuario"]}' data-rol='${row["permiso_rol"]}' data-password='${row["usu_password"]}' >Modificar</button>`
+            render: (data, type, row, meta) => `<button class="btn btn-warning" data-id='${data}' >Modificar</button>`
         },
         {
             title: 'ELIMINAR',
@@ -73,7 +75,12 @@ const datatable = new DataTable('#tablaAsignaciones', {
 
 const guardar = async (evento) => {
     evento.preventDefault();
-    if (!validarFormulario(formulario, ['permiso_id'])) {
+
+    const permiso_usuario = formulario.permiso_usuario.value;
+    const permiso_rol = formulario.permiso_rol.value;
+    
+  
+    if (permiso_usuario === '' || permiso_rol === '') {
         Toast.fire({
             icon: 'info',
             text: 'Debe llenar todos los datos'
@@ -98,6 +105,7 @@ const guardar = async (evento) => {
             case 1:
                 formulario.reset();
                 icon = 'success';
+                buscar();
                 break;
 
             case 0:
@@ -147,36 +155,27 @@ const buscar = async () => {
 const traeDatos = (e) => {
     const button = e.target;
     const id = button.dataset.id;
-    const usuario = button.dataset.usuario;
-    const rol = button.dataset.rol;
     const password = button.dataset.password;
 
     const dataset = {
         id,
-        usuario,
-        rol,
         password
     };
     console.log(dataset)
     colocarDatos(dataset);
     const body = new FormData(formulario);
     body.append('permiso_id', id);
-    body.append('permiso_usuario', usuario);
-    body.append('permiso_rol', rol); 
     body.append('usu_password', password);
         
 };
 const colocarDatos = (dataset) => {
-   
-    formulario.permiso_usuario.value = dataset.usuario;
-    formulario.permiso_rol.value = dataset.rol;
-
+  
     formulario.permiso_id.value = dataset.id;
     formulario.usu_password.value = dataset.password;
 
     divPassword.parentElement.style.display = ' block';
-    // divUsuario.parentElement.style.display = 'none';
-    // divRol.parentElement.style.display = 'none';
+    divUsuario.parentElement.style.display = 'none';
+    divRol.parentElement.style.display = 'none';
     btnGuardar.disabled = true
     btnGuardar.parentElement.style.display = 'none';
     btnBuscar.disabled = true
@@ -189,55 +188,63 @@ const colocarDatos = (dataset) => {
   
 }
 
+
 const modificar = async () => {
-    // if (!validarFormulario(divUsuario)) {
-    //     Toast.fire({
-    //         icon: 'info',
-    //         text: 'Debe llenar todos los campos'
-    //     });
-    //     // return;
-    // }
-    
-    const body = new FormData(formulario)
-    const url = 'parcial_moralesbatz/API/asignaciones/modificar';
-    const config = {
-        method : 'POST',
-        body
+    const newPassword = prompt("Ingrese la nueva contraseña:");
+    if (newPassword === null || newPassword === "") {
+        return;
     }
 
+    const id = formulario.permiso_id.value;
+
+    const url = '/parcial_moralesbatz/API/asignaciones/modificar'; 
+    const body = new FormData();
+    body.append('permiso_id', id);
+    body.append('usu_password', newPassword);
+
+    // Excluye permiso_usuario y permiso_rol
+    // body.append('permiso_usuario', formulario.permiso_usuario.value);
+    // body.append('permiso_rol', formulario.permiso_rol.value);
+
+    const config = {
+        method: 'POST',
+        body
+    };
+
     try {
-        const respuesta = await fetch(url, config)
+        const respuesta = await fetch(url, config);
         const data = await respuesta.json();
-        console.log(data)
-        return
-        const {codigo, mensaje,detalle} = data;
-        let icon = 'info'
+
+        const { codigo, mensaje, detalle } = data;
+        let icon = 'info';
         switch (codigo) {
             case 1:
-                formulario.reset();
-                icon = 'success'
-                buscar();
-                cancelarAccion();
+                formulario.usu_password.value = newPassword;
+                icon = 'success';
                 break;
-        
+
             case 0:
-                icon = 'error'
-                console.log(detalle)
+                icon = 'error';
+                console.log(detalle);
                 break;
-        
+
             default:
                 break;
         }
-
         Toast.fire({
             icon,
             text: mensaje
-        })
-
+        });
     } catch (error) {
         console.log(error);
     }
-}
+};
+
+
+
+
+
+
 buscar()
 formulario.addEventListener('submit', guardar);
 btnBuscar.addEventListener('click', buscar);

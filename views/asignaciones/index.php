@@ -6,8 +6,8 @@
      
         <div class="row mb-4 mt-3">
             <div class="col-lg-12">
-                <div id="usu_password" class="col">
-                    <label for="usu_password">Ingrese una contraseña nueva</label>
+                <div id="usu_password"  class="col">
+                    <label for="usu_password">precione modificar para cambiar la contrasena</label>
                     <input type="password" name="usu_password" id="usu_password" class="form-control">
                 </div>
             </div>
